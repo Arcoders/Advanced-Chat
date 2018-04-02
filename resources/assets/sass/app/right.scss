@@ -1,0 +1,24 @@
+.right {
+  min-width: calc(100% - 390px);
+  height: 100%;
+  background-color: #ece5dd;
+}
+
+/*  Welcome --------------------------------------------- */
+
+.welcome {
+  background: #f7f9fa;
+  height: calc(95vh - 5px);
+  border-bottom: 5px solid #25d366;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 50%;
+    height: 15%;
+  }
+  p {
+    color: #a8a8a8;
+  }
+}
