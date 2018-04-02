@@ -14,10 +14,17 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(App\User::class, function (Faker $faker) {
+
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+
+        'status' => $faker->text(70),
+        'avatar' => (rand(1, 2) === 1) ? "https://api.adorable.io/avatars/285/$faker->firstName.png" : NULL,
+        'cover' => $faker->imageUrl(800, 400),
+
+        'password' => encrypt('secret'),
         'remember_token' => str_random(10),
     ];
+
 });
