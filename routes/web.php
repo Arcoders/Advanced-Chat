@@ -11,10 +11,36 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return view('welcome'); });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['middleware' => ['auth']], function () {
+
+    // ----------------------------------------------------------
+
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    // ----------------------------------------------------------
+
+    Route::prefix('profile')->group(function () {
+
+        Route::get('/users', 'ProfileController@users');
+        Route::get('/user/{user}', 'ProfileController@user');
+        Route::post('/edit', 'ProfileController@edit');
+
+    });
+
+    // ----------------------------------------------------------
+
+    Route::prefix('friendship')->group(function () {
+
+
+
+    });
+
+    // ----------------------------------------------------------
+
+});
+

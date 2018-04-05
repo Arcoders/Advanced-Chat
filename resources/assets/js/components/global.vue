@@ -6,7 +6,9 @@
             left
 
         .right
-            router-view
+            router-view(:key='$route.fullPath')
+
+        vue-snotify
 </template>
 
 <script>

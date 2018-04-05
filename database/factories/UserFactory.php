@@ -23,7 +23,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'avatar' => (rand(1, 2) === 1) ? "https://api.adorable.io/avatars/285/$faker->firstName.png" : NULL,
         'cover' => $faker->imageUrl(800, 400),
 
-        'password' => encrypt('secret'),
+        'password' => bcrypt('secret'),
         'remember_token' => str_random(10),
     ];
 
