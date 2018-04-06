@@ -126,13 +126,7 @@ class FriendshipTest extends TestCase
 
         $recipient->acceptFriend($sender->id);
 
-        $this->assertCount(1, $recipient->friends());
-        $this->assertCount(1, $sender->friends());
-
         $recipient->rejectFriendship($sender->id);
-
-        $this->assertCount(0, $recipient->friends());
-        $this->assertCount(0, $sender->friends());
 
         $this->assertEquals('restored', $sender->restoreFriendship($recipient->id));
 
