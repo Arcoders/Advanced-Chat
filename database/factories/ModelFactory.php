@@ -13,18 +13,40 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(App\User::class, function (Faker $faker)
+{
 
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-
         'status' => $faker->text(70),
+
         'avatar' => (rand(1, 2) === 1) ? "https://api.adorable.io/avatars/285/$faker->firstName.png" : NULL,
         'cover' => $faker->imageUrl(800, 400),
 
         'password' => bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+
+});
+
+$factory->define(\App\Friendship::class, function()
+{
+
+    return [
+
+        'requester' => function ()
+        {
+            return factory(\App\User::class)->create()->id;
+        },
+
+        'requested' => function ()
+        {
+            return factory(\App\User::class)->create()->id;
+        },
+
+        'status' => 0
+
     ];
 
 });

@@ -36,7 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::prefix('friendship')->group(function () {
 
-
+        Route::get('/friends', 'FriendshipsController@friends');
 
     });
 
