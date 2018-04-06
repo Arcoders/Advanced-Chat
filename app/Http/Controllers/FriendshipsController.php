@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 class FriendshipsController extends Controller
 {
 
-    public function friends()
+    public function chats()
     {
-        return Auth::user()->requestsReceived();
+        return Auth::user()->chats();
     }
 
 }

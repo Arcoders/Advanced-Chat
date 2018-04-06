@@ -125,4 +125,28 @@ trait Friends
 
     }
 
+    public function chats() {
+
+        return Friendship::whereSender($this->id)->accepted()->select('id', 'requested')->with('recipient')->get()
+            ->
+            merge(
+
+                Friendship::whereRecipient($this->id)->accepted()->select('id', 'requester')->with('sender')->get()
+
+            );
+
+    }
+
+    public function chatsIds() {
+
+        return array_merge(
+
+            Friendship::whereSender($this->id)->accepted()->pluck('id')->toArray(),
+
+            Friendship::whereRecipient($this->id)->accepted()->pluck('id')->toArray()
+
+        );
+
+    }
+
 }

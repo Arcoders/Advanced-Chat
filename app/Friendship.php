@@ -47,4 +47,14 @@ class Friendship extends Model
 
     }
 
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'requester');
+    }
+
+    public function recipient()
+    {
+        return $this->belongsTo(User::class, 'requested');
+    }
+
 }
