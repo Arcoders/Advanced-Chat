@@ -14,7 +14,10 @@ trait Friends
 
         if ($status == 'not_friends')
         {
-            Friendship::create(['requester' => $this->id, 'requested' => $recipientId]);
+            if ($this->restoreFriendship($recipientId) == 'create')
+            {
+                Friendship::create(['requester' => $this->id, 'requested' => $recipientId]);
+            }
 
             return 'waiting';
         }
@@ -101,6 +104,24 @@ trait Friends
         if ($friendship->requester == $this->id) return 'waiting';
 
         if ($friendship->requested == $this->id) return 'pending';
+
+    }
+
+    public function restoreFriendship($userId)
+    {
+
+        if ($friendship = Friendship::withTrashed()->betweenUsers($this->id, $userId)->first())
+        {
+
+            $friendship->update(['requester' => $this->id, 'requested' => $userId, 'status' => 0]);
+
+            $friendship->restore();
+
+            return 'restored';
+
+        }
+
+        return 'create';
 
     }
 

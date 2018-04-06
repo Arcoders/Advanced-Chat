@@ -115,4 +115,32 @@ class FriendshipTest extends TestCase
         $this->assertCount(0, $recipient->friends());
     }
 
+    public function test_restore_friendship_if_it_already_exists_or_create_a_new_one()
+    {
+        $sender = factory(User::class)->create();
+        $recipient = factory(User::class)->create();
+
+        $this->assertEquals('create', $sender->restoreFriendship($recipient->id));
+
+        $sender->addFriend($recipient->id);
+
+        $recipient->acceptFriend($sender->id);
+
+        $this->assertCount(1, $recipient->friends());
+        $this->assertCount(1, $sender->friends());
+
+        $recipient->rejectFriendship($sender->id);
+
+        $this->assertCount(0, $recipient->friends());
+        $this->assertCount(0, $sender->friends());
+
+        $this->assertEquals('restored', $sender->restoreFriendship($recipient->id));
+
+        $recipient->acceptFriend($sender->id);
+
+        $this->assertCount(1, $recipient->friends());
+        $this->assertCount(1, $sender->friends());
+
+    }
+
 }
