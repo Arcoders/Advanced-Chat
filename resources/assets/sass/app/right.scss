@@ -234,6 +234,52 @@
 }
 
 
+/* Friendship ---------------------------------------------------------------------- */
+
+.friends {
+  .style_friend {
+    width: 40px;
+    height: 42px;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #EEEEEE;
+    box-shadow: 0 0 26px -5px rgba(255, 255, 255, 1);
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+  .add_friend {
+    position: absolute;
+    top: 15px;
+    left: 22px;
+  }
+  .delete_friend {
+    position: absolute;
+    top: 70px;
+    left: 22px;
+  }
+  button {
+    border: 0;
+    background-color: transparent;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-weight: bold;
+    outline: 0;
+  }
+  .accepted {
+    color: #FFCCC1;
+  }
+  .green:hover {
+    color: #009688;
+  }
+  .orange:hover {
+    color: #FF9800;
+  }
+}
+
 /* Vue effects ---------------------------------------------------------------------- */
 
 .slide-fade-enter-active {

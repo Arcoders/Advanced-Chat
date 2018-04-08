@@ -36,7 +36,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::prefix('friendship')->group(function () {
 
-        Route::get('/chats', 'FriendshipsController@chats');
+        Route::get('/check/{user_id}', 'FriendshipsController@check');
+        Route::post('/add/{user_id}', 'FriendshipsController@add');
+        Route::patch('/accept/{user_id}', 'FriendshipsController@accept');
+        Route::delete('/reject/{user_id}', 'FriendshipsController@reject');
 
     });
 

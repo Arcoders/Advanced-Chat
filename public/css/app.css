@@ -930,6 +930,64 @@ body {
   font-weight: bold;
 }
 
+/* Friendship ---------------------------------------------------------------------- */
+
+.friends .style_friend {
+  width: 40px;
+  height: 42px;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 50%;
+  border: 2px solid #EEEEEE;
+  -webkit-box-shadow: 0 0 26px -5px white;
+          box-shadow: 0 0 26px -5px white;
+}
+
+.friends .style_friend:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.friends .add_friend {
+  position: absolute;
+  top: 15px;
+  left: 22px;
+}
+
+.friends .delete_friend {
+  position: absolute;
+  top: 70px;
+  left: 22px;
+}
+
+.friends button {
+  border: 0;
+  background-color: transparent;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-weight: bold;
+  outline: 0;
+}
+
+.friends .accepted {
+  color: #FFCCC1;
+}
+
+.friends .green:hover {
+  color: #009688;
+}
+
+.friends .orange:hover {
+  color: #FF9800;
+}
+
 /* Vue effects ---------------------------------------------------------------------- */
 
 .slide-fade-enter-active {

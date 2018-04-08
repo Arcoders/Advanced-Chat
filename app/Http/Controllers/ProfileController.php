@@ -15,7 +15,11 @@ class ProfileController extends Controller
     public function users()
     {
 
-        return response()->json(User::all()->except([Auth::user()->id])->random(8), 200);
+        $excluded = Auth::user()->friends('ids');
+
+        array_push($excluded, Auth::id());
+
+        return response()->json(User::all()->except($excluded)->random(8), 200);
 
     }
 

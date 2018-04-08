@@ -1,4 +1,5 @@
 <template lang="pug">
+    transition(name="fade")
         .right(v-if="showProfile")
             .head
 
@@ -22,7 +23,7 @@
                         .cover
                             img(:src="userInfo.cover")
 
-                            // friendship
+                            friendship(v-if="user.id != userInfo.id", :userId="user.id", :profileId="userInfo.id")
 
                         avatar.photo(:username="userInfo.name", color="#fff", :src="userInfo.avatar", :size="100")
 

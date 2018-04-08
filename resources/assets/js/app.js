@@ -21,6 +21,7 @@ import Welcome from './components/right/welcome.vue';
 import Profile from './components/right/profile/profile.vue';
 import EditProfile from './components/right/profile/edit_profile.vue';
 import Loading from './components/spinner/loading.vue';
+import Friendship from './components/right/friends/friendship.vue';
 
 import {store} from './store/store';
 
@@ -28,6 +29,7 @@ Vue.component('global', Global);
 Vue.component('left', Left);
 Vue.component('avatar', Avatar);
 Vue.component('loading', Loading);
+Vue.component('friendship', Friendship);
 
 const router = new VueRouter({
    routes: [
