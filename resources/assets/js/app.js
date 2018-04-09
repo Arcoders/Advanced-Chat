@@ -22,6 +22,11 @@ import Profile from './components/right/profile/profile.vue';
 import EditProfile from './components/right/profile/edit_profile.vue';
 import Loading from './components/spinner/loading.vue';
 import Friendship from './components/right/friends/friendship.vue';
+import Search from './components/left/sections/search.vue';
+import List from './components/left/sections/list.vue';
+import Groups from './components/right/groups/groups.vue';
+import MyGroups from './components/right/groups/my_groups.vue';
+import Pagination from './components/pagination/paginate.vue';
 
 import {store} from './store/store';
 
@@ -30,6 +35,9 @@ Vue.component('left', Left);
 Vue.component('avatar', Avatar);
 Vue.component('loading', Loading);
 Vue.component('friendship', Friendship);
+Vue.component('search', Search);
+Vue.component('list', List);
+Vue.component('paginate', Pagination);
 
 const router = new VueRouter({
    routes: [
@@ -38,6 +46,12 @@ const router = new VueRouter({
            path: '/profile/:profileId?', component: Profile, name: 'profile',
            children: [
                { path: 'edit', component: EditProfile, name: 'editProfile' }
+           ]
+       },
+       {
+           path: '/groups', component: Groups, name: 'groups',
+           children: [
+               { path: 'my', component: MyGroups }
            ]
        },
        { path: '/*', component: Welcome }

@@ -18,6 +18,18 @@
                 a
                     i.material-icons fingerprint
 
+        search
+
+        .filter
+
+            button(@click="changeList(true)", v-bind:class="{ active: privateList }") Private
+
+            button(@click="changeList(false)", v-bind:class="{ active: !privateList }") Groups
+
+        .contact_list
+
+            list(:showPrivateList="privateList")
+
 </template>
 
 <script>
@@ -25,6 +37,26 @@
     import {mapState} from 'vuex';
 
     export default {
+
+        // ---------------------------------------------------
+
+        data() {
+            return {
+                privateList: true
+            }
+        },
+
+        // ---------------------------------------------------
+
+        methods: {
+            // ---------------------------------------------------
+
+            changeList(boolean) {
+                this.privateList = boolean;
+            }
+
+            // ---------------------------------------------------
+        },
 
         // ---------------------------------------------------
 

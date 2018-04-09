@@ -280,6 +280,225 @@
   }
 }
 
+/* Groups ---------------------------------------------------------------------- */
+
+.groups_box {
+  height: calc(95vh - 60px);
+  display: flex;
+  position: relative;
+  .content {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f8f8;
+    overflow-y: auto;
+  }
+  .groups {
+    width: 100%;
+    height: 100%;
+    background: #f1f1f1;
+    display: flex;
+  }
+  .group {
+    width: 50%;
+    height: 100%;
+    a {
+      width: 100%;
+      height: 100%;
+      color: #777777;
+      font-size: 0.9em;
+      font-weight: bold;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        color: #009688;
+        background-color: #f3f3f3;
+      }
+    }
+  }
+}
+
+/* Table ---------------------------------------------------------------------- */
+
+.chat_groups {
+  background: #f8f8f8;
+  height: calc(100% - 30px);
+  padding: 15px 40px;
+  overflow-y: hidden;
+  h4 {
+    margin: 25px 0;
+    color: #777777;
+  }
+  hr {
+    border: 0;
+    height: 3px;
+    margin: 20px 0;
+    background: #EEEEEE;
+  }
+  .add {
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    margin-left: 5px;
+    &:hover {
+      color: #009688;
+    }
+  }
+  .data a {
+    text-decoration: none;
+    color: #777777;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+    box-shadow: 0 0 2px 0 rgba(119, 119, 119, 0.5);
+    transition: all 2s ease-out;
+    background: #fbfbfb;
+  }
+  tr:nth-of-type(odd) {
+    background: #FFFFFF;
+  }
+  th {
+    background: #fbfbfb;
+    color: #777777;
+    font-size: 0.8em;
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    color: #777777;
+    font-size: 0.9em;
+    font-weight: inherit;
+  }
+  .avatar {
+    margin: auto;
+    max-height: 40px;
+    max-width: 40px;
+  }
+  .green {
+    color: #009688;
+  }
+  .red {
+    color: #E57373;
+  }
+  .orange {
+    color: #FF9800;
+  }
+  .format {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+  }
+  .link_add {
+    text-decoration: none;
+    margin-left: 5px;
+  }
+  .pagination {
+    display: block;
+    margin-top: 1em;
+    color: white;
+    text-align: right;
+    .numbers li {
+      display: inline-block;
+      .disable {
+        pointer-events: none;
+        box-shadow: none;
+        border-radius: 2px;
+        color: #aaaaaa;
+        border: 1px solid #f5f5f5;
+      }
+      a, span {
+        color: #777777;
+        background: white;
+        border: 1px solid #cccccc;
+        padding: 5px;
+        display: block;
+        text-align: center;
+        border-radius: 5px;
+        margin: 2px;
+        box-shadow: 0 0 1px 0 rgba(119, 119, 119, 0.5);
+      }
+      a.current, span.current {
+        background: #fafafa;
+        color: #009688;
+      }
+      a {
+        text-decoration: none;
+        transition: all .3s ease-out;
+        cursor: pointer;
+        &:hover {
+          background: #f1f1f1;
+          color: #009688;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+  .group_input {
+    height: 40px;
+    margin: 20px 0;
+    display: flex;
+    .upload_avatar {
+      position: relative;
+      [type=file] {
+        cursor: pointer;
+        display: block;
+        filter: alpha(opacity = 0);
+        min-height: 100%;
+        min-width: 100%;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        text-align: right;
+        top: 0;
+      }
+      i {
+        color: #777777;
+      }
+    }
+    .input_name {
+      width: 100%;
+      border: 1px solid #e8e8e8;
+      outline: 0;
+      padding-left: 10px;
+    }
+    .button_upload {
+      height: 100%;
+      width: 50px;
+      background-color: #f1f1f1;
+      border: 0;
+      outline: 0;
+      cursor: pointer;
+      &:hover {
+        background-color: #EEEEEE;
+      }
+    }
+    .button_send {
+      width: 100px;
+      border: 0;
+      outline: 0;
+      background-color: #f1f1f1;
+      cursor: pointer;
+      font-weight: bold;
+      color: #009688;
+      &:hover {
+        background-color: #EEEEEE;
+      }
+    }
+    button:disabled,
+    button[disabled] {
+      display: none;
+    }
+  }
+
+}
+
 /* Vue effects ---------------------------------------------------------------------- */
 
 .slide-fade-enter-active {

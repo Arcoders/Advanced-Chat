@@ -45,5 +45,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     // ----------------------------------------------------------
 
+    Route::prefix('groups')->group(function () {
+
+        Route::get('/all', 'GroupsController@groups');
+
+    });
+
+    // ----------------------------------------------------------
+
 });
 
