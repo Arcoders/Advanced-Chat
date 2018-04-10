@@ -16,7 +16,7 @@ class Group extends Model
         return $this->belongsToMany(User::class)->withPivot('group_id', 'user_id');
     }
 
-    public function scopeMyGroups($query)
+    public function scopeAllGroups($query)
     {
 
         return $query->where('user_id', Auth::id())->withTrashed()->paginate(4);

@@ -30,19 +30,19 @@
                 tr.data(v-for='(group, index) in groups')
 
                     td
-                        avatar.avatar(:size="45", :username="group.name", :src="group.avatar", color="#fff")
+                        avatar.table_avatar(:size="45", :username="group.name", :src="group.avatar", color="#fff")
 
                     td {{ group.name }}
 
                     td
-                        router-link(to="/x")
+                        router-link(:to="editLink(group)")
                             i.material-icons.green mode_edit
 
                     td
-                        button.format(v-if="!group.deleted_at")
+                        button.format(v-if="!group.deleted_at", v-on:click="changeStatus(group.id, 'delete')")
                             i.material-icons.red delete
 
-                        button.format(v-else)
+                        button.format(v-else, v-on:click="changeStatus(group.id, 'restore')")
                             i.material-icons.orange settings_backup_restore
 
                 tr(v-if="notFound")
@@ -117,6 +117,58 @@
 
             changePage(number) {
                 this.getGroups(`/groups/all?page=${number}`)
+            },
+
+            // ---------------------------------------------------
+
+            changeStatus(group_id, type) {
+
+                this.loading = true;
+
+                this.$http.patch(`/groups/${type}/${group_id}`).then(res => {
+
+                    this.loading = false;
+
+                    if (res.status === 200) {
+
+                        this.$snotify.success(res.data, 'Done');
+
+                        this.changePage(this.actualPage);
+
+                    } else {
+
+                        this.error();
+
+                    }
+
+                }, err => {
+
+                    this.loading = false;
+                    this.error();
+                    console.log(err);
+
+                });
+
+            },
+
+            // ---------------------------------------------------
+
+            error() {
+                this.$snotify.error('An error has occurred', ':(');
+            },
+
+            // ---------------------------------------------------
+
+            editLink(group) {
+
+                return {
+                    name: 'edit_group',
+                    params: {
+                        group_id: group.id,
+                        group_name: group.name
+                    }
+                }
+
             }
 
             // ---------------------------------------------------

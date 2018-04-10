@@ -326,6 +326,12 @@
   height: calc(100% - 30px);
   padding: 15px 40px;
   overflow-y: hidden;
+  .avatar {
+    margin-top: 20px;
+  }
+  .avatar_shadow {
+    box-shadow: 0 0 0 5px #EEEEEE;
+  }
   h4 {
     margin: 25px 0;
     color: #777777;
@@ -375,7 +381,7 @@
     font-size: 0.9em;
     font-weight: inherit;
   }
-  .avatar {
+  .table_avatar {
     margin: auto;
     max-height: 40px;
     max-width: 40px;

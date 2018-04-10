@@ -48,6 +48,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix('groups')->group(function () {
 
         Route::get('/all', 'GroupsController@groups');
+        Route::patch('/delete/{group}', 'GroupsController@delete');
+        Route::patch('/restore/{group}', 'GroupsController@restore');
+
+        Route::get('/group/{group}', 'GroupsController@group');
+        Route::post('/edit/{group}', 'GroupsController@edit');
 
     });
 
