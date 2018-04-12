@@ -54,6 +54,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/group/{group}', 'GroupsController@group');
         Route::post('/edit/{group}', 'GroupsController@edit');
 
+        Route::get('/friends', 'GroupsController@friends');
+        Route::post('/create', 'GroupsController@create');
+
     });
 
     // ----------------------------------------------------------

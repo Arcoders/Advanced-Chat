@@ -28,6 +28,7 @@ import Groups from './components/right/groups/groups.vue';
 import MyGroups from './components/right/groups/my_groups.vue';
 import Pagination from './components/pagination/paginate.vue';
 import EditGroup from './components/right/groups/edit_group.vue';
+import AddGroup from './components/right/groups/add_group.vue';
 import Multiselect from 'vue-multiselect';
 
 import {store} from './store/store';
@@ -54,8 +55,9 @@ const router = new VueRouter({
        {
            path: '/groups', component: Groups, name: 'groups',
            children: [
-               { path: 'my', component: MyGroups },
-               { path: 'edit/:group_id/:group_name', component: EditGroup, name: 'edit_group' }
+               { path: 'all', component: MyGroups },
+               { path: 'edit/:group_id/:group_name', component: EditGroup, name: 'edit_group' },
+               { path: 'add', component: AddGroup, name: 'add_group' }
            ]
        },
        { path: '/*', component: Welcome }

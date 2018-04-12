@@ -36,10 +36,15 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
+
             'name' => 'required|min:3|max:25',
+
             'status' => 'required|min:5|max:70',
-            'avatar' => 'image|mimes:jpeg,jpg,png,gif|max:1000',
+
+            'avatar' => 'image|mimes:jpeg,jpg,png|max:800',
+
             'cover' => 'image|mimes:jpeg,jpg,png,gif|max:1000'
+
         ]);
 
         if ($request->file('avatar'))

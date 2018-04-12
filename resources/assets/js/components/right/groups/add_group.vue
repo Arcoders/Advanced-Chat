@@ -1,6 +1,6 @@
 <template lang="pug">
 
-    .chat_groups(v-if="showEdit")
+    .chat_groups
 
         .data
 
@@ -8,14 +8,14 @@
                 i.material-icons arrow_back
 
             avatar.avatar(
-                    :username="groupName",
-                    color="#fff",
-                    :backgroundColor="avatarGris",
-                    :src="groupAvatar",
-                    v-bind:class="{ avatar_shadow: groupName || groupAvatar }"
+            :username="groupName",
+            color="#fff",
+            :backgroundColor="avatarGris",
+            :src="groupAvatar",
+            v-bind:class="{ avatar_shadow: groupName || groupAvatar }"
             )
 
-            h4  Edit Group
+            h4  Add Group
 
             hr
 
@@ -34,32 +34,32 @@
                     i.material-icons clear
 
                 input(
-                    v-show="!groupAvatar",
-                    type="file",
-                    name="avatar",
-                    ref="avatarInput",
-                    v-on:change="onFileChange($event)")
+                v-show="!groupAvatar",
+                type="file",
+                name="avatar",
+                ref="avatarInput",
+                v-on:change="onFileChange($event)")
 
             input.input_name(
-                        @keyup.enter="editGroup",
-                        name="name",
-                        v-model='groupName'
-                        type="text",
-                        placeholder="Group name...")
+            @keyup.enter="addGroup",
+            name="name",
+            v-model='groupName'
+            type="text",
+            placeholder="Group name...")
 
-            button.button_send(@click="editGroup",type='button', v-bind:disabled="btnDisabled") Save
+            button.button_send(@click="addGroup", type='button', v-bind:disabled="btnDisabled") Create
 
 
         multi-select(
-                v-if="showFriends",
-                v-model="selectedUsers",
-                track-by="id",
-                :multiple="true",
-                label="name",
-                :hide-selected="true",
-                :close-on-select="false",
-                :options="listFriends",
-                placeholder="Select friends"
+        v-if="showFriends",
+        v-model="selectedUsers",
+        track-by="id",
+        :multiple="true",
+        label="name",
+        :hide-selected="true",
+        :close-on-select="false",
+        :options="listFriends",
+        placeholder="Select friends"
         )
 
 
@@ -78,26 +78,32 @@
         // ---------------------------------------------------
 
         mounted() {
-            this.getGroup();
+            this.allFriends();
         },
 
         // ---------------------------------------------------
 
         methods: {
+            // ---------------------------------------------------
+
+            resetForm() {
+
+                this.groupAvatar = null;
+                this.groupName = '';
+                this.selectedUsers = [];
+                this.selectedIds = [];
+
+            },
 
             // ---------------------------------------------------
 
-            editGroup(type = null) {
+            addGroup() {
 
                 if (this.btnDisabled) return;
 
-                if (type === 'image' && this.newImage) return;
-
-                let data = (type === 'image') ? { deleteImage: true } : this.formData;
-
                 this.loading = true;
 
-                this.$http.post(`/groups/edit/${this.group_id}`, data).then(res => {
+                this.$http.post('/groups/create', this.formData).then(res => {
 
                     this.loading = false;
 
@@ -115,39 +121,33 @@
 
             // ---------------------------------------------------
 
-            getGroup() {
+            allFriends() {
 
-                this.$http.get(`/groups/group/${this.group_id}`).then(res => {
+                this.$http.get('/groups/friends').then(res => {
 
                     if (res.status === 200) {
 
-                        this.groupName = res.data.group.name;
-                        this.groupAvatar = res.data.group.avatar;
-                        this.selectedUsers = res.data.group.users;
-
-                        this.showEdit = true;
-
-                        if (res.data.friends.length > 0) {
+                        if (res.data.length > 0) {
 
                             this.showFriends = true;
-                            this.listFriends = res.data.friends;
+                            this.listFriends = res.data;
 
                         } else {
                             this.$snotify.warning('Find friends to add them to the group', 'Alert');
                         }
 
                     } else {
-                        this.back();
+                        this.$snotify.warning('Could not load friend list', 'Alert');
                     }
 
-                }, () => this.back());
+                }, () => this.$snotify.warning('Could not load friend list', 'Alert'));
 
             },
 
             // ---------------------------------------------------
 
             back() {
-                return this.$router.push('/groups/my');
+                return this.$router.push('/groups/all');
             }
 
             // ---------------------------------------------------

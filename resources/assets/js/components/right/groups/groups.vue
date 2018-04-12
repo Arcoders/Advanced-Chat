@@ -22,7 +22,7 @@
                         router-link(to="groups/add") Add Groups
 
                     .group
-                        router-link(to="groups/my") My Groups
+                        router-link(to="groups/all") My Groups
 
                 router-view
 

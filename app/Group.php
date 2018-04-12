@@ -11,6 +11,8 @@ class Group extends Model
 
     use SoftDeletes;
 
+    protected $fillable = ['name', 'user_id', 'avatar'];
+
     public function users()
     {
         return $this->belongsToMany(User::class)->withPivot('group_id', 'user_id');
