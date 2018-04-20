@@ -51,12 +51,12 @@ export const mixin = {
 
         done(data) {
 
+            this.showChat = true;
+
             this.chatName = data.name;
             if (data.avatar) this.chatAvatar = data.avatar;
 
             this.latestMessages();
-
-            this.showChat = true;
 
         },
 
@@ -71,6 +71,8 @@ export const mixin = {
         // ----------------------------------------------
 
         latestMessages() {
+
+            this.loading = true;
 
             this.$http.get(`/messages/latest/${this.$route.name}/${this.chatId}`).then(res => {
                 if (res.status === 200) {
@@ -89,6 +91,10 @@ export const mixin = {
                     });
 
                 }
+            }, err => {
+
+                console.log(err);
+
             });
 
         },

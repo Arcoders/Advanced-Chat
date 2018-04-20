@@ -1,5 +1,7 @@
 <template lang="pug">
 
+transition(name='slide-fade')
+
     .chat(v-if="showChat")
 
         .head

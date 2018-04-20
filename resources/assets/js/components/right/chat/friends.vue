@@ -1,5 +1,7 @@
 <template lang="pug">
 
+transition(name='slide-fade')
+
     .chat(v-if="showChat")
 
         .head
@@ -38,7 +40,6 @@
                             i.material-icons clear
 
         send(:showModal="showModal", @toggleModal="toggleModal")
-
 
 </template>
 
