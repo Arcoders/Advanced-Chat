@@ -20,9 +20,12 @@ class Group extends Model
 
     public function scopeAllGroups($query)
     {
-
         return $query->where('user_id', Auth::id())->withTrashed()->paginate(4);
+    }
 
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'group_chat');
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
 class FriendshipsController extends Controller
@@ -32,6 +33,13 @@ class FriendshipsController extends Controller
     {
 
         return response()->json(Auth::user()->rejectFriendship($user_id), 200);
+
+    }
+
+    public function userForChat(User $user)
+    {
+
+        return response()->json($user, 200);
 
     }
 

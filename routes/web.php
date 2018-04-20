@@ -61,5 +61,40 @@ Route::group(['middleware' => ['auth']], function () {
 
     // ----------------------------------------------------------
 
+    Route::prefix('list')->group(function () {
+
+        Route::get('/chats', 'ChatsController@chats');
+
+    });
+
+    // ----------------------------------------------------------
+
+    Route::prefix('notifications')->group(function () {
+
+        Route::get('/count', 'NotificationsController@count');
+        Route::get('/all', 'NotificationsController@all');
+        Route::get('/mark_as_read', 'NotificationsController@markAsRead');
+
+    });
+
+    // ----------------------------------------------------------
+
+    Route::prefix('access_box')->group(function () {
+
+        Route::get('/friend_chat/{user}', 'FriendshipsController@userForChat');
+        Route::get('/group_chat/{group_id}', 'GroupsController@groupForChat');
+
+    });
+
+    // ----------------------------------------------------------
+
+    Route::prefix('messages')->group(function () {
+
+        Route::get('/latest/{room_name}/{chat_id}', 'MessagesController@latest');
+
+    });
+
+    // ----------------------------------------------------------
+
 });
 

@@ -3,11 +3,24 @@ import VueRouter from 'vue-router';
 import Avatar from 'vue-avatar';
 import VueResource from 'vue-resource';
 import Snotify from 'vue-snotify';
+import VueMoment from 'vue-moment';
+import VueTruncate from 'vue-truncate-filter';
+import VuePusher from 'vue-pusher';
 
 window.Vue = require('vue');
 window.Vue.use(VueRouter);
 window.Vue.use(VueResource);
-Vue.use(Snotify);
+window.Vue.use(VueMoment);
+window.Vue.use(VueTruncate);
+window.Vue.use(Snotify);
+
+window.Vue.use(VuePusher, {
+    api_key: '60efd870de38efff2291',
+    options: {
+        cluster: 'eu',
+        encrypted: true,
+    }
+});
 
 
 
@@ -30,6 +43,11 @@ import Pagination from './components/pagination/paginate.vue';
 import EditGroup from './components/right/groups/edit_group.vue';
 import AddGroup from './components/right/groups/add_group.vue';
 import Multiselect from 'vue-multiselect';
+import Notifications from './components/left/sections/notifications.vue';
+import ChatFriends from './components/right/chat/friends.vue';
+import ChatGroups from './components/right/chat/groups.vue';
+import Messages from './components/right/chat/sections/messages.vue';
+import Send from './components/right/chat/sections/send.vue';
 
 import {store} from './store/store';
 
@@ -42,6 +60,9 @@ Vue.component('search', Search);
 Vue.component('list', List);
 Vue.component('paginate', Pagination);
 Vue.component('multi-select', Multiselect);
+Vue.component('notifications', Notifications);
+Vue.component('messages', Messages);
+Vue.component('send', Send);
 
 const router = new VueRouter({
    routes: [
@@ -60,10 +81,13 @@ const router = new VueRouter({
                { path: 'add', component: AddGroup, name: 'add_group' }
            ]
        },
+       { path: '/friend/:chat_id/:friend_name/:friend_id', component: ChatFriends, name: 'friend_chat' },
+       { path: '/group/:chat_id/:group_name/', component: ChatGroups, name: 'group_chat' },
        { path: '/*', component: Welcome }
    ]
 });
 
+Vue.prototype.$eventBus = new Vue();
 
 new Vue({
    el: '#app',

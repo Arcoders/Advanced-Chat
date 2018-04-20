@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Notifications\GroupsNotification;
+use App\Traits\TriggerPusher;
 use App\Traits\UploadFiles;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class GroupsController extends Controller
 {
 
     use UploadFiles;
+    use TriggerPusher;
 
     public function groups()
     {
@@ -44,6 +49,13 @@ class GroupsController extends Controller
 
     }
 
+    public function groupForChat($group_id)
+    {
+
+        return response()->json(Group::findOrFail($group_id), 200);
+
+    }
+
     public function edit(Group $group, Request $request)
     {
 
@@ -55,6 +67,10 @@ class GroupsController extends Controller
             $group->avatar = null;
 
             $group->save();
+
+            $users = $group->users->pluck('id')->toArray();
+
+            $this->notify(User::find($users), "Avatar removed - $group->name group");
 
             return response()->json('Avatar deleted successfully', 200);
 
@@ -86,6 +102,8 @@ class GroupsController extends Controller
         $group->save();
 
         $group->users()->sync($request['ids']);
+
+        $this->notifyEditedUsers($group, $request['ids']);
 
         return response()->json('Group edited successfully', 200);
 
@@ -127,6 +145,8 @@ class GroupsController extends Controller
 
         ])->users()->sync($request['ids']);
 
+        $this->notify(User::find($request['ids']), 'invited you to the ' . $request['name'] . ' group');
+
         return response()->json("$request->name created successfully", 200);
 
     }
@@ -149,5 +169,34 @@ class GroupsController extends Controller
 
     }
 
+    protected function notify($users, $message)
+    {
+
+        foreach ($users as $user) :
+
+            $this->trigger("user_$user->id", 'refreshList', ['type' => 'group']);
+
+            if ($user->id === Auth::id()) continue;
+
+            Notification::send($user, new GroupsNotification($message));
+
+            $this->trigger("notification_$user->id", 'updateCount', []);
+
+        endforeach;
+
+    }
+
+    protected function notifyEditedUsers($group , $new)
+    {
+
+        $old = $group->users->pluck('id');
+
+        $this->notify(User::find(collect($new)->diff($old)), "Invited you - $group->name group");
+
+        $this->notify(User::find($deleted = $old->diff($new)), "Deleted you - $group->name group");
+
+        $this->notify(User::find($old->diff($deleted)), "Changes made - $group->name group");
+
+    }
 
 }

@@ -75,3 +75,27 @@ $factory->define(\App\Group::class,  function (Faker $faker) {
     ];
 
 });
+
+$factory->define(\App\Message::class, function (Faker $faker) {
+
+    $photo = (rand(1, 4) === 1) ? $faker->imageUrl(800, 400) : NULL;
+
+    return [
+
+        'user_id' => function ()
+        {
+            return factory(\App\User::class)->create()->id;
+        },
+
+        'friend_chat' => function ()
+        {
+            return factory(\App\Friendship::class)->create()->id;
+        },
+
+        'body' => $faker->text(70),
+
+        'photo' => $photo
+
+    ];
+
+});

@@ -57,4 +57,9 @@ class Friendship extends Model
         return $this->belongsTo(User::class, 'requested');
     }
 
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'friend_chat');
+    }
+
 }
