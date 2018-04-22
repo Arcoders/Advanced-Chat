@@ -71,6 +71,7 @@
 
     const arraySort = require('array-sort');
     const renameKeys = require('rename-keys');
+    const arrayFindIndex = require('array-find-index');
 
     export default {
 
@@ -85,8 +86,7 @@
                 loading: false,
                 groups: [],
                 friends: [],
-                chatsIds: [],
-                errorLoad: false
+                errorLoad: false,
             }
         },
 
@@ -107,6 +107,47 @@
             // ----------------------------------------------
 
             showRight() {
+
+            },
+
+            // ----------------------------------------------
+
+            updatePreview(object, id, message) {
+
+                let chat = arrayFindIndex(object, f => f.id === Number(id));
+                if (chat === -1) return;
+
+                let obj = object[chat];
+                obj.msg = message;
+
+                object.splice(chat, 1);
+                object.splice(object.filter(f => !f.msg).length, 0, obj);
+
+            },
+
+            // ----------------------------------------------
+
+            newMessageEvent(privateIds, groupsIds) {
+
+                privateIds.forEach(id => {
+
+                    this.$pusher.subscribe(`friend_chat-${id}`).bind('newMessage', (data) => {
+
+                        this.updatePreview(this.friends, data.message.friend_chat, data.message);
+
+                    });
+
+                });
+
+                groupsIds.forEach(id => {
+
+                    this.$pusher.subscribe(`group_chat-${id}`).bind('newMessage', (data) => {
+
+                        this.updatePreview(this.groups, data.message.group_chat, data.message);
+
+                    });
+
+                });
 
             },
 
@@ -159,9 +200,9 @@
 
                 });
 
-                this.$store.commit('updateFriends', arraySort(this.friends, 'msg.created').reverse());
+                this.$store.commit('updateFriends', arraySort(this.friends, 'msg.created_at').reverse());
 
-                this.chatsIds = data.chatsIds;
+                this.newMessageEvent(data.privateIds, data.groupsIds);
 
             },
 

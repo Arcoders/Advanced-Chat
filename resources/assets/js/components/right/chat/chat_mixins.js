@@ -23,12 +23,26 @@ export const mixin = {
 
     created() {
 
+        this.pushRealTimeMessage();
+
     },
 
 // ----------------------------------------------
 
     mounted() {
+
         this.getInformation();
+
+    },
+
+// ----------------------------------------------
+
+    watch: {
+        messages() {
+
+            this.scrollDown();
+
+        }
     },
 
 // ----------------------------------------------
@@ -37,9 +51,58 @@ export const mixin = {
 
         // ----------------------------------------------
 
+        pushRealTimeMessage() {
+
+            this.$pusher.subscribe(this.dataType.newMessage).bind('newMessage', (data) => {
+
+                if (this.messages[0]['welcome']) this.messages.shift();
+
+                this.messages.push({
+                    id: data.user.id,
+                    name: data.user.name,
+                    avatar: data.user.avatar,
+                    photo: data.message.photo,
+                    text: data.message.body,
+                    time: data.message.created_at
+                });
+
+            });
+
+        },
+
+        // ----------------------------------------------
+
+        pushErrorMessage(data) {
+
+            this.messages.push(data);
+
+        },
+
+        // ----------------------------------------------
+
+        onFileChange(e) {
+
+            let files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+
+            let reader = new FileReader();
+
+            reader.onload = (e) => {
+
+                this.photo = e.target.result;
+                document.getElementById("msg").focus();
+
+            };
+
+            reader.readAsDataURL(files[0]);
+
+        },
+
+        // ----------------------------------------------
+
         getInformation() {
 
-            this.$http.get(this.routeType.information).then(res => {
+            this.$http.get(this.dataType.information).then(res => {
 
                 (res.status === 200) ? this.done(res.data) : this.$router.push('/');
 
@@ -79,6 +142,8 @@ export const mixin = {
 
                     if (res.data.length === 0) return this.welcomeMessage();
 
+                    res.data.reverse();
+
                     res.data.forEach(data => {
                         this.messages.push({
                             id: data.user.id,
@@ -115,6 +180,28 @@ export const mixin = {
 
         // ----------------------------------------------
 
+        hideModal() {
+
+            this.photo = null;
+            this.showModal = false;
+
+        },
+
+        // ----------------------------------------------
+
+        scrollDown() {
+
+            window.setTimeout( () => {
+
+                let elem = window.document.getElementById('chat');
+                elem.scrollTop = elem.scrollHeight;
+
+            }, 500);
+
+        }
+
+        // ----------------------------------------------
+
     },
 
 // ----------------------------------------------
@@ -129,6 +216,14 @@ export const mixin = {
 
         // ----------------------------------------------
 
+        uploadedPhoto() {
+
+            if (this.photo) return this.$refs.photoInput.files[0];
+
+        },
+
+        // ----------------------------------------------
+
         infoById() {
 
             return (this.$route.params.friend_id) ? window.atob(this.$route.params.friend_id) : this.chatId;
@@ -137,10 +232,16 @@ export const mixin = {
 
         // ----------------------------------------------
 
-        routeType() {
+        dataType() {
+
             return {
-                information: `/access_box/${this.$route.name}/${this.infoById}`
+
+                information: `/access_box/${this.$route.name}/${this.infoById}`,
+
+                newMessage: `${this.$route.name}-${this.chatId}`
+
             }
+
         }
 
         // ----------------------------------------------

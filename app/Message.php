@@ -16,17 +16,12 @@ class Message extends Model
 
     }
 
-    public function scopeTotalMessages($query, $room, $chat)
-    {
-
-        return $query->where($room, $chat)->count();
-
-    }
 
     public function scopeLatestMessages($query, $room, $chat, $num)
     {
 
-        return $query->where($room, $chat)->with('user')->skip($this->totalMessages($room, $chat) - $num)->take($num)->get();
+        return $query->where($room, $chat)->with('user')->orderBy('id', 'desc')->take($num)->get();
+
 
     }
 

@@ -29143,15 +29143,28 @@ var mixin = {
 
         // ----------------------------------------------
 
-        created: function created() {},
+        created: function created() {
+
+                this.pushRealTimeMessage();
+        },
 
 
         // ----------------------------------------------
 
         mounted: function mounted() {
+
                 this.getInformation();
         },
 
+
+        // ----------------------------------------------
+
+        watch: {
+                messages: function messages() {
+
+                        this.scrollDown();
+                }
+        },
 
         // ----------------------------------------------
 
@@ -29159,14 +29172,63 @@ var mixin = {
 
                 // ----------------------------------------------
 
-                getInformation: function getInformation() {
+                pushRealTimeMessage: function pushRealTimeMessage() {
                         var _this = this;
 
-                        this.$http.get(this.routeType.information).then(function (res) {
+                        this.$pusher.subscribe(this.dataType.newMessage).bind('newMessage', function (data) {
 
-                                res.status === 200 ? _this.done(res.data) : _this.$router.push('/');
+                                if (_this.messages[0]['welcome']) _this.messages.shift();
+
+                                _this.messages.push({
+                                        id: data.user.id,
+                                        name: data.user.name,
+                                        avatar: data.user.avatar,
+                                        photo: data.message.photo,
+                                        text: data.message.body,
+                                        time: data.message.created_at
+                                });
+                        });
+                },
+
+
+                // ----------------------------------------------
+
+                pushErrorMessage: function pushErrorMessage(data) {
+
+                        this.messages.push(data);
+                },
+
+
+                // ----------------------------------------------
+
+                onFileChange: function onFileChange(e) {
+                        var _this2 = this;
+
+                        var files = e.target.files || e.dataTransfer.files;
+                        if (!files.length) return;
+
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+
+                                _this2.photo = e.target.result;
+                                document.getElementById("msg").focus();
+                        };
+
+                        reader.readAsDataURL(files[0]);
+                },
+
+
+                // ----------------------------------------------
+
+                getInformation: function getInformation() {
+                        var _this3 = this;
+
+                        this.$http.get(this.dataType.information).then(function (res) {
+
+                                res.status === 200 ? _this3.done(res.data) : _this3.$router.push('/');
                         }, function () {
-                                return _this.$router.push('/');
+                                return _this3.$router.push('/');
                         });
                 },
 
@@ -29195,17 +29257,19 @@ var mixin = {
                 // ----------------------------------------------
 
                 latestMessages: function latestMessages() {
-                        var _this2 = this;
+                        var _this4 = this;
 
                         this.loading = true;
 
                         this.$http.get('/messages/latest/' + this.$route.name + '/' + this.chatId).then(function (res) {
                                 if (res.status === 200) {
 
-                                        if (res.data.length === 0) return _this2.welcomeMessage();
+                                        if (res.data.length === 0) return _this4.welcomeMessage();
+
+                                        res.data.reverse();
 
                                         res.data.forEach(function (data) {
-                                                _this2.messages.push({
+                                                _this4.messages.push({
                                                         id: data.user.id,
                                                         name: data.user.name,
                                                         avatar: data.user.avatar,
@@ -29234,7 +29298,31 @@ var mixin = {
                                 text: 'Be the first to greet...',
                                 time: new Date()
                         });
+                },
+
+
+                // ----------------------------------------------
+
+                hideModal: function hideModal() {
+
+                        this.photo = null;
+                        this.showModal = false;
+                },
+
+
+                // ----------------------------------------------
+
+                scrollDown: function scrollDown() {
+
+                        window.setTimeout(function () {
+
+                                var elem = window.document.getElementById('chat');
+                                elem.scrollTop = elem.scrollHeight;
+                        }, 500);
                 }
+
+                // ----------------------------------------------
+
         },
 
         // ----------------------------------------------
@@ -29247,6 +29335,14 @@ var mixin = {
 
                 // ----------------------------------------------
 
+                uploadedPhoto: function uploadedPhoto() {
+
+                        if (this.photo) return this.$refs.photoInput.files[0];
+                },
+
+
+                // ----------------------------------------------
+
                 infoById: function infoById() {
 
                         return this.$route.params.friend_id ? window.atob(this.$route.params.friend_id) : this.chatId;
@@ -29255,9 +29351,14 @@ var mixin = {
 
                 // ----------------------------------------------
 
-                routeType: function routeType() {
+                dataType: function dataType() {
+
                         return {
-                                information: '/access_box/' + this.$route.name + '/' + this.infoById
+
+                                information: '/access_box/' + this.$route.name + '/' + this.infoById,
+
+                                newMessage: this.$route.name + '-' + this.chatId
+
                         };
                 }
 
@@ -29274,7 +29375,7 @@ var mixin = {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(134);
-module.exports = __webpack_require__(212);
+module.exports = __webpack_require__(218);
 
 
 /***/ }),
@@ -29330,11 +29431,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_right_chat_friends_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_23__components_right_chat_friends_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__components_right_chat_groups_vue__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__components_right_chat_groups_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_24__components_right_chat_groups_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__components_right_chat_sections_messages_vue__ = __webpack_require__(218);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__components_right_chat_sections_messages_vue__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__components_right_chat_sections_messages_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_25__components_right_chat_sections_messages_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__components_right_chat_sections_send_vue__ = __webpack_require__(221);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__components_right_chat_sections_send_vue__ = __webpack_require__(214);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__components_right_chat_sections_send_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_26__components_right_chat_sections_send_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__store_store__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__store_store__ = __webpack_require__(217);
 
 
 
@@ -43426,6 +43527,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var arraySort = __webpack_require__(179);
 var renameKeys = __webpack_require__(184);
+var arrayFindIndex = __webpack_require__(224);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -43440,7 +43542,6 @@ var renameKeys = __webpack_require__(184);
             loading: false,
             groups: [],
             friends: [],
-            chatsIds: [],
             errorLoad: false
         };
     },
@@ -43471,13 +43572,55 @@ var renameKeys = __webpack_require__(184);
 
         // ----------------------------------------------
 
-        updateList: function updateList() {
+        updatePreview: function updatePreview(object, id, message) {
+
+            var chat = arrayFindIndex(object, function (f) {
+                return f.id === Number(id);
+            });
+            if (chat === -1) return;
+
+            var obj = object[chat];
+            obj.msg = message;
+
+            object.splice(chat, 1);
+            object.splice(object.filter(function (f) {
+                return !f.msg;
+            }).length, 0, obj);
+        },
+
+
+        // ----------------------------------------------
+
+        newMessageEvent: function newMessageEvent(privateIds, groupsIds) {
             var _this2 = this;
+
+            privateIds.forEach(function (id) {
+
+                _this2.$pusher.subscribe('friend_chat-' + id).bind('newMessage', function (data) {
+
+                    _this2.updatePreview(_this2.friends, data.message.friend_chat, data.message);
+                });
+            });
+
+            groupsIds.forEach(function (id) {
+
+                _this2.$pusher.subscribe('group_chat-' + id).bind('newMessage', function (data) {
+
+                    _this2.updatePreview(_this2.groups, data.message.group_chat, data.message);
+                });
+            });
+        },
+
+
+        // ----------------------------------------------
+
+        updateList: function updateList() {
+            var _this3 = this;
 
             this.$eventBus.$on('filter', function (data) {
 
-                _this2.groups = data.groups;
-                _this2.friends = data.friends;
+                _this3.groups = data.groups;
+                _this3.friends = data.friends;
             });
         },
 
@@ -43485,19 +43628,19 @@ var renameKeys = __webpack_require__(184);
         // ----------------------------------------------
 
         chats: function chats() {
-            var _this3 = this;
+            var _this4 = this;
 
             this.loading = true;
 
             this.$http.get('/list/chats').then(function (res) {
 
-                _this3.loading = false;
+                _this4.loading = false;
 
-                res.status === 200 ? _this3.done(res.data) : _this3.errorLoad = true;
+                res.status === 200 ? _this4.done(res.data) : _this4.errorLoad = true;
             }, function (err) {
 
-                _this3.loading = false;
-                _this3.errorLoad = true;
+                _this4.loading = false;
+                _this4.errorLoad = true;
                 console.log(err);
             });
         },
@@ -43518,9 +43661,9 @@ var renameKeys = __webpack_require__(184);
                 });
             });
 
-            this.$store.commit('updateFriends', arraySort(this.friends, 'msg.created').reverse());
+            this.$store.commit('updateFriends', arraySort(this.friends, 'msg.created_at').reverse());
 
-            this.chatsIds = data.chatsIds;
+            this.newMessageEvent(data.privateIds, data.groupsIds);
         },
 
 
@@ -46329,6 +46472,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -46395,7 +46544,7 @@ var render = function() {
             _c("div", { staticClass: "chat_box" }, [
               _c(
                 "div",
-                { staticClass: "chat_content" },
+                { staticClass: "chat_content", attrs: { id: "chat" } },
                 [
                   _c("messages", {
                     attrs: { messages: _vm.messages, user: _vm.user }
@@ -46412,7 +46561,13 @@ var render = function() {
                               _vm._v("file_upload")
                             ]),
                             _c("input", {
-                              attrs: { type: "file", name: "photo" }
+                              ref: "photoInput",
+                              attrs: { type: "file", name: "photo" },
+                              on: {
+                                change: function($event) {
+                                  _vm.onFileChange($event)
+                                }
+                              }
                             })
                           ])
                         ])
@@ -46440,8 +46595,17 @@ var render = function() {
                 : _vm._e()
             ]),
             _c("send", {
-              attrs: { showModal: _vm.showModal },
-              on: { toggleModal: _vm.toggleModal }
+              attrs: {
+                showModal: _vm.showModal,
+                uploadedPhoto: _vm.uploadedPhoto,
+                photo: _vm.photo,
+                user: _vm.user
+              },
+              on: {
+                toggleModal: _vm.toggleModal,
+                errorMessage: _vm.pushErrorMessage,
+                clearPhoto: _vm.hideModal
+              }
             })
           ],
           1
@@ -46559,6 +46723,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -46625,7 +46795,7 @@ var render = function() {
             _c("div", { staticClass: "chat_box" }, [
               _c(
                 "div",
-                { staticClass: "chat_content" },
+                { staticClass: "chat_content", attrs: { id: "chat" } },
                 [
                   _c("messages", {
                     attrs: { messages: _vm.messages, user: _vm.user }
@@ -46642,7 +46812,13 @@ var render = function() {
                               _vm._v("file_upload")
                             ]),
                             _c("input", {
-                              attrs: { type: "file", name: "photo" }
+                              ref: "photoInput",
+                              attrs: { type: "file", name: "photo" },
+                              on: {
+                                change: function($event) {
+                                  _vm.onFileChange($event)
+                                }
+                              }
                             })
                           ])
                         ])
@@ -46670,8 +46846,17 @@ var render = function() {
                 : _vm._e()
             ]),
             _c("send", {
-              attrs: { showModal: _vm.showModal },
-              on: { toggleModal: _vm.toggleModal }
+              attrs: {
+                showModal: _vm.showModal,
+                uploadedPhoto: _vm.uploadedPhoto,
+                photo: _vm.photo,
+                user: _vm.user
+              },
+              on: {
+                toggleModal: _vm.toggleModal,
+                errorMessage: _vm.pushErrorMessage,
+                clearPhoto: _vm.hideModal
+              }
             })
           ],
           1
@@ -46691,65 +46876,14 @@ if (false) {
 
 /***/ }),
 /* 211 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return store; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
-
-
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
-
-var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-
-    state: {
-        user: null,
-        groups: null,
-        friends: null
-    },
-
-    mutations: {
-
-        updateUser: function updateUser(state, user) {
-            return state.user = user;
-        },
-
-        updateGroups: function updateGroups(state, groups) {
-            return state.groups = groups;
-        },
-
-        updateFriends: function updateFriends(state, friends) {
-            return state.friends = friends;
-        }
-
-    }
-
-});
-
-/***/ }),
-/* 212 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(219)
+var __vue_script__ = __webpack_require__(212)
 /* template */
-var __vue_template__ = __webpack_require__(220)
+var __vue_template__ = __webpack_require__(213)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -46788,7 +46922,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 219 */
+/* 212 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46844,7 +46978,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 220 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -46912,15 +47046,15 @@ if (false) {
 }
 
 /***/ }),
-/* 221 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(222)
+var __vue_script__ = __webpack_require__(215)
 /* template */
-var __vue_template__ = __webpack_require__(224)
+var __vue_template__ = __webpack_require__(216)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -46959,7 +47093,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 222 */
+/* 215 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46988,13 +47122,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     // ----------------------------------------------
 
-    props: ['showModal'],
+    props: ['user', 'showModal', 'photo', 'uploadedPhoto'],
 
     // ----------------------------------------------
 
     data: function data() {
         return {
-            messageText: ''
+            messageText: '',
+            chatId: window.atob(this.$route.params.chat_id)
         };
     },
 
@@ -47008,6 +47143,79 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         toggleModal: function toggleModal() {
 
             this.$emit('toggleModal', !this.showModal);
+        },
+
+
+        // ----------------------------------------------
+
+        sendMessage: function sendMessage() {
+            var _this = this;
+
+            if (this.invalidForm) return;
+
+            this.$http.post('messages/send', this.formData).then(function (res) {
+
+                res.status === 200 ? _this.resMessage('done') : _this.resMessage('error');
+            }, function (err) {
+
+                console.log(err);
+                _this.resMessage('error');
+            });
+        },
+
+
+        // ----------------------------------------------
+
+        resMessage: function resMessage(type) {
+
+            if (type === 'error') {
+
+                this.$emit('errorMessage', {
+                    id: this.user.id,
+                    name: this.user.name,
+                    avatar: this.user.avatar,
+                    photo: this.photo,
+                    text: this.messageText,
+                    error: true
+                });
+            }
+
+            this.$emit('clearPhoto');
+            this.messageText = '';
+        }
+    },
+
+    // ----------------------------------------------
+
+    computed: {
+
+        // ----------------------------------------------
+
+        /**
+         * @return {boolean}
+         */
+
+        invalidForm: function invalidForm() {
+
+            if (this.photo) return false;
+
+            return this.messageText.length < 2;
+        },
+
+
+        // ----------------------------------------------
+
+        formData: function formData() {
+
+            var formData = new FormData();
+
+            formData.append('chatId', this.chatId);
+            formData.append('messageText', this.messageText);
+            formData.append('roomName', this.$route.name);
+
+            if (this.uploadedPhoto) formData.append('photo', this.uploadedPhoto);
+
+            return formData;
         }
 
         // ----------------------------------------------
@@ -47019,8 +47227,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 223 */,
-/* 224 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -47066,6 +47273,15 @@ var render = function() {
           },
           domProps: { value: _vm.messageText },
           on: {
+            keyup: function($event) {
+              if (
+                !("button" in $event) &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              return _vm.sendMessage($event)
+            },
             input: function($event) {
               if ($event.target.composing) {
                 return
@@ -47075,20 +47291,21 @@ var render = function() {
           }
         })
       ]),
-      _vm._m(0)
+      _c(
+        "button",
+        { attrs: { type: "button" }, on: { click: _vm.sendMessage } },
+        [
+          _c(
+            "i",
+            { class: [_vm.invalidForm ? "" : "green", "material-icons"] },
+            [_vm._v("send")]
+          )
+        ]
+      )
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { attrs: { type: "button" } }, [
-      _c("i", { staticClass: "material-icons" }, [_vm._v("send")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -47097,6 +47314,89 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-bf3587ee", module.exports)
   }
 }
+
+/***/ }),
+/* 217 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return store; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+
+var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
+
+    state: {
+        user: null,
+        groups: null,
+        friends: null
+    },
+
+    mutations: {
+
+        updateUser: function updateUser(state, user) {
+            return state.user = user;
+        },
+
+        updateGroups: function updateGroups(state, groups) {
+            return state.groups = groups;
+        },
+
+        updateFriends: function updateFriends(state, friends) {
+            return state.friends = friends;
+        }
+
+    }
+
+});
+
+/***/ }),
+/* 218 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+module.exports = function (arr, predicate, ctx) {
+	if (typeof Array.prototype.findIndex === 'function') {
+		return arr.findIndex(predicate, ctx);
+	}
+
+	if (typeof predicate !== 'function') {
+		throw new TypeError('predicate must be a function');
+	}
+
+	var list = Object(arr);
+	var len = list.length;
+
+	if (len === 0) {
+		return -1;
+	}
+
+	for (var i = 0; i < len; i++) {
+		if (predicate.call(ctx, list[i], i, list)) {
+			return i;
+		}
+	}
+
+	return -1;
+};
+
 
 /***/ })
 /******/ ]);

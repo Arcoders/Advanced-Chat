@@ -12,11 +12,13 @@ class ChatsController extends Controller
 
         $chats = [
 
-            'groups' => $this->withLastMessage(Auth::user()->groups),
+            'groups' => $this->withLastMessage($groups = Auth::user()->groups),
 
             'friends' => $this->withLastMessage(Auth::user()->chats()),
 
-            'chatsIds' => Auth::user()->chatsIds()
+            'privateIds' => Auth::user()->chatsIds(),
+
+            'groupsIds' => $groups->pluck('id')
 
         ];
 

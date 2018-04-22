@@ -21,7 +21,7 @@ transition(name='slide-fade')
 
         .chat_box
 
-            .chat_content
+            .chat_content#chat
 
                 messages(:messages="messages", :user="user")
 
@@ -31,7 +31,7 @@ transition(name='slide-fade')
                 .container(v-if="!photo")
                     label.upload_photo
                         i.material-icons file_upload
-                        input(type="file", name="photo")
+                        input(type="file", name="photo", @change="onFileChange($event)", ref="photoInput")
 
                 .container(v-else)
                     .preview
@@ -39,7 +39,13 @@ transition(name='slide-fade')
                         a(@click="photo = null")
                             i.material-icons clear
 
-        send(:showModal="showModal", @toggleModal="toggleModal")
+        send(:showModal="showModal",
+            @toggleModal="toggleModal",
+            :uploadedPhoto="uploadedPhoto",
+            :photo="photo",
+            :user="user",
+            @errorMessage="pushErrorMessage",
+            @clearPhoto="hideModal")
 
 </template>
 
