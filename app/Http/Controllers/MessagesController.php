@@ -59,6 +59,13 @@ class MessagesController extends Controller
 
     }
 
+    public function typing(Request $r)
+    {
+
+        $this->trigger("typing-$r->room_name-$r->chat_id", 'typing', Auth::user());
+
+    }
+
     protected function pushMessage(array $data)
     {
 

@@ -3,7 +3,7 @@
     .bubble
 
         div(v-for='message_user in messages',
-        v-bind:class="['line', checkId(message_user.id) ? 'user' : 'friend']")
+            v-bind:class="['line', checkId(message_user.id) ? 'user' : 'friend']")
 
             div(v-bind:class="checkId(message_user.id) ? 'user_mouth' : 'friend_mouth'")
 
@@ -22,6 +22,20 @@
             .time(v-else)
                 i.material-icons.error error
 
+        div(v-for='userTyping in usersTyping', v-if="userTyping.id != user.id", class="typing")
+
+            div(class="typing_mouth")
+                avatar(:username='userTyping.name',
+                color='#fff',
+                :size='45',
+                :src='userTyping.avatar',
+                class="friend_img")
+
+            .typing_content
+                span(class="dot")
+                span(class="dot")
+                span(class="dot")
+
 </template>
 
 <script>
@@ -30,7 +44,7 @@
 
         // ----------------------------------------------
 
-        props: ['messages', 'user'],
+        props: ['messages', 'user', 'usersTyping'],
 
         // ----------------------------------------------
 

@@ -29,7 +29,8 @@
         data() {
           return {
               messageText: '',
-              chatId: window.atob(this.$route.params.chat_id)
+              chatId: window.atob(this.$route.params.chat_id),
+              typing: false
           }
         },
 
@@ -83,8 +84,17 @@
 
                  this.$emit('clearPhoto');
                  this.messageText = '';
+                 this.typing = false;
 
             },
+
+            // ----------------------------------------------
+
+            usersTyping() {
+
+                this.$http.get(`/messages/typing/${this.$route.name}/${this.chatId}`);
+
+            }
 
             // ----------------------------------------------
 
@@ -103,6 +113,15 @@
             invalidForm() {
 
                 if (this.photo) return false;
+
+                if (this.messageText.length >= 1) {
+
+                    if (!this.typing) this.usersTyping();
+                    this.typing = true;
+
+                } else {
+                    this.typing = false;
+                }
 
                 return (this.messageText.length < 2);
 

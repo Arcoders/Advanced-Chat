@@ -23,7 +23,7 @@ transition(name='slide-fade')
 
             .chat_content#chat
 
-                messages(:messages="messages", :user="user")
+                messages(:messages="messages", :user="user", :usersTyping="typing")
 
 
             .modal(v-if="showModal")

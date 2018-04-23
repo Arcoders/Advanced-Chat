@@ -91,6 +91,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix('messages')->group(function () {
 
         Route::get('/latest/{room_name}/{chat_id}', 'MessagesController@latest');
+        Route::get('/typing/{room_name}/{chat_id}', 'MessagesController@typing');
         Route::Post('/send', 'MessagesController@send');
 
     });

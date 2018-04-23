@@ -1,4 +1,5 @@
 
+const arrayFindIndex = require('array-find-index');
 import {mapState} from 'vuex';
 
 export const mixin = {
@@ -15,7 +16,8 @@ export const mixin = {
             showModal: false,
             photo: null,
             messages: [],
-            latest: []
+            latest: [],
+            typing: []
         }
     },
 
@@ -24,6 +26,7 @@ export const mixin = {
     created() {
 
         this.pushRealTimeMessage();
+        this.eventUsersTyping();
 
     },
 
@@ -42,6 +45,12 @@ export const mixin = {
 
             this.scrollDown();
 
+        },
+
+        typing() {
+
+            this.scrollDown();
+
         }
     },
 
@@ -54,6 +63,8 @@ export const mixin = {
         pushRealTimeMessage() {
 
             this.$pusher.subscribe(this.dataType.newMessage).bind('newMessage', (data) => {
+
+                this.typing = this.typing.filter(t => t.id !== data.user.id);
 
                 if (this.messages[0]['welcome']) this.messages.shift();
 
@@ -75,6 +86,24 @@ export const mixin = {
         pushErrorMessage(data) {
 
             this.messages.push(data);
+
+        },
+
+        // ----------------------------------------------
+
+        eventUsersTyping() {
+
+            this.$pusher.subscribe(this.dataType.typing).bind('typing', (data) => {
+
+                if (this.typing[arrayFindIndex(this.typing, t => t.id === data.id)]) return;
+
+                this.typing.push(data);
+
+                setTimeout(() => {
+                    this.typing = this.typing.filter(t => t.id !== data.id);
+                }, 15000);
+
+            });
 
         },
 
@@ -238,7 +267,9 @@ export const mixin = {
 
                 information: `/access_box/${this.$route.name}/${this.infoById}`,
 
-                newMessage: `${this.$route.name}-${this.chatId}`
+                newMessage: `${this.$route.name}-${this.chatId}`,
+
+                typing: `typing-${this.$route.name}-${this.chatId}`
 
             }
 
