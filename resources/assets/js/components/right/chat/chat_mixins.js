@@ -17,7 +17,8 @@ export const mixin = {
             photo: null,
             messages: [],
             latest: [],
-            typing: []
+            typing: [],
+            hover: true
         }
     },
 
@@ -25,6 +26,7 @@ export const mixin = {
 
     created() {
 
+        this.updateOnlineUsers();
         this.pushRealTimeMessage();
         this.eventUsersTyping();
 
@@ -109,6 +111,18 @@ export const mixin = {
 
         // ----------------------------------------------
 
+        updateOnlineUsers() {
+            this.$pusher.subscribe(this.dataType.online).bind('onlineUsers', (data) => {
+
+                if (data.length === 0) return this.onlineUsers = null;
+
+                this.onlineUsers = data;
+
+            });
+        },
+
+        // ----------------------------------------------
+
         onFileChange(e) {
 
             let files = e.target.files || e.dataTransfer.files;
@@ -149,6 +163,7 @@ export const mixin = {
             if (data.avatar) this.chatAvatar = data.avatar;
 
             this.latestMessages();
+            this.getOnlineUsers()
 
         },
 
@@ -227,6 +242,36 @@ export const mixin = {
 
             }, 500);
 
+        },
+
+        // ----------------------------------------------
+
+        disconnect() {
+
+            this.$http.get(`/online/disconnect/${this.$route.name}/${this.chatId}`).then(this.hover = true);
+
+        },
+
+        // ----------------------------------------------
+
+        connect() {
+
+            if (this.hover) this.getOnlineUsers();
+
+        },
+
+        // ----------------------------------------------
+
+        getOnlineUsers() {
+
+            this.hover = false;
+
+            this.$http.get(`/online/connected/${this.$route.name}/${this.chatId}`).then(res => {
+
+                if (res.status !== 200)  this.onlineUsers = null;
+
+            }, () => this.onlineUsers = null);
+
         }
 
         // ----------------------------------------------
@@ -269,7 +314,9 @@ export const mixin = {
 
                 newMessage: `${this.$route.name}-${this.chatId}`,
 
-                typing: `typing-${this.$route.name}-${this.chatId}`
+                typing: `typing-${this.$route.name}-${this.chatId}`,
+
+                online: `online-${this.$route.name}-${this.chatId}`
 
             }
 

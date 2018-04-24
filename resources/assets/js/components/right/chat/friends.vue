@@ -2,7 +2,7 @@
 
 transition(name='slide-fade')
 
-    .chat(v-if="showChat")
+    .chat(v-if="showChat", @mouseleave="disconnect", @mouseout="connect")
 
         .head
 

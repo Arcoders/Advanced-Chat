@@ -21,7 +21,8 @@
                 .information
                     .widget(v-bind:class="{ widget_100: profileId }")
                         .cover
-                            img(:src="userInfo.cover")
+                            img(v-if="userInfo.cover", :src="userInfo.cover")
+                            img(v-else, :src="defaultCover")
 
                             friendship(v-if="user.id != userInfo.id", :userId="user.id", :profileId="userInfo.id")
 
@@ -69,7 +70,8 @@
               records: false,
               userInfo: null,
               showProfile: false,
-              profileId: this.$route.params.profileId
+              profileId: this.$route.params.profileId,
+              defaultCover: '/images/default/default_cover.jpg'
           }
         },
 
@@ -93,7 +95,7 @@
                     status: this.user.status,
                     id: this.user.id,
                     avatar: this.user.avatar,
-                    cover: this.checkCover(this.user.cover)
+                    cover: this.user.cover
                 };
 
             },
@@ -144,7 +146,7 @@
                             status: res.data.status,
                             id: res.data.id,
                             avatar: res.data.avatar,
-                            cover: this.checkCover(res.data.cover)
+                            cover: res.data.cover
                         };
 
                         this.showProfile = true;
@@ -157,12 +159,6 @@
                     this.$router.push('/profile');
                 });
 
-            },
-
-            // ---------------------------------------------------
-
-            checkCover(cover) {
-                return (cover) ? cover : '/images/default/default_cover.jpg'
             },
 
             // ---------------------------------------------------

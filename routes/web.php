@@ -81,8 +81,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::prefix('access_box')->group(function () {
 
-        Route::get('/friend_chat/{user}', 'FriendshipsController@userForChat');
-        Route::get('/group_chat/{group_id}', 'GroupsController@groupForChat');
+        Route::get('/friend_chat/{user}', 'FriendshipsController@userForChat')->middleware('isFriend');
+        Route::get('/group_chat/{group_id}', 'GroupsController@groupForChat')->middleware('groupMember');
 
     });
 
@@ -93,6 +93,15 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/latest/{room_name}/{chat_id}', 'MessagesController@latest');
         Route::get('/typing/{room_name}/{chat_id}', 'MessagesController@typing');
         Route::Post('/send', 'MessagesController@send');
+
+    });
+
+    // ----------------------------------------------------------
+
+    Route::prefix('online')->group(function () {
+
+        Route::get('/connected/{room_name}/{chat_id}', 'OnlineController@connected');
+        Route::get('/disconnect/{room_name}/{chat_id}', 'OnlineController@disconnect');
 
     });
 

@@ -34,5 +34,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class);
     }
 
+    public function online()
+    {
+        return $this->hasOne(Online::class);
+    }
 
 }
