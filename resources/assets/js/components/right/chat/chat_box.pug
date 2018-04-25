@@ -1,6 +1,6 @@
 transition(name='slide-fade')
 
-    .chat(v-if="showChat")
+    .chat(v-if="showChat", @mouseleave="disconnect", @mouseout="connect")
 
         .head
 
@@ -19,9 +19,9 @@ transition(name='slide-fade')
 
         .chat_box
 
-            .chat_content
+            .chat_content#chat
 
-                messages(:messages="messages", :user="user")
+                messages(:messages="messages", :user="user", :usersTyping="typing")
 
 
             .modal(v-if="showModal")
@@ -41,5 +41,6 @@ transition(name='slide-fade')
         @toggleModal="toggleModal",
         :uploadedPhoto="uploadedPhoto",
         :photo="photo",
+        :user="user",
         @errorMessage="pushErrorMessage",
         @clearPhoto="hideModal")

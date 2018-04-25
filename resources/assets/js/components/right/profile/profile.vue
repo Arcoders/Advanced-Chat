@@ -66,7 +66,7 @@
 
         data() {
           return {
-              users: null,
+              users: [],
               records: false,
               userInfo: null,
               showProfile: false,
@@ -77,13 +77,35 @@
 
         // ---------------------------------------------------
 
+        created() {
+
+            this.removeUserCurrentlyAdded();
+
+        },
+
+        // ---------------------------------------------------
+
         mounted() {
+
           this.getProfile();
+
         },
 
         // ---------------------------------------------------
 
         methods: {
+            // ---------------------------------------------------
+
+            removeUserCurrentlyAdded() {
+
+                this.$pusher.subscribe(`user_${this.user.id}`).bind('refreshList', (data) => {
+
+                    this.users = this.users.filter(u => u.id !== Number(data.id));
+
+                });
+
+            },
+
             // ---------------------------------------------------
 
             setUserInfo() {

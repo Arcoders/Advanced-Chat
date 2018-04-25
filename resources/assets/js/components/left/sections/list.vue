@@ -68,6 +68,7 @@
 <script>
 
     import {mapState} from 'vuex';
+    import {mixin} from '../../../style';
 
     const arraySort = require('array-sort');
     const renameKeys = require('rename-keys');
@@ -92,9 +93,13 @@
 
         // ----------------------------------------------
 
+        mixins: [mixin],
+
+        // ----------------------------------------------
+
         created() {
 
-            this.$pusher.subscribe(`user_${this.user.id}`).bind('refreshList', () => this.chats());
+            this.$pusher.subscribe(`user_${this.user.id}`).bind('refreshList', (data) => (data.type) ? this.chats() : null);
 
             this.updateList();
             this.chats();
@@ -103,12 +108,6 @@
         // ----------------------------------------------
 
         methods: {
-
-            // ----------------------------------------------
-
-            showRight() {
-
-            },
 
             // ----------------------------------------------
 

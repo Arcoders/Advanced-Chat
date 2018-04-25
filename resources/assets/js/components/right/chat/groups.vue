@@ -1,52 +1,6 @@
 <template lang="pug">
 
-    transition(name='slide-fade')
-
-        .chat(v-if="showChat")
-
-            .head
-
-                avatar.img(:username="chatName", :src="chatAvatar", color="#fff")
-
-                .info
-
-                    p {{ chatName }}
-
-                    p.online(v-if="onlineUsers")
-                        span(v-for="onlineUser in onlineUsers") {{ onlineUser.name }}
-                            span.state.green &#8226;
-
-                    p.online(v-else) Offline
-                        span.state.red &#8226;
-
-            .chat_box
-
-                .chat_content#chat
-
-                    messages(:messages="messages", :user="user")
-
-
-                .modal(v-if="showModal")
-
-                    .container(v-if="!photo")
-                        label.upload_photo
-                            i.material-icons file_upload
-                            input(type="file", name="photo", @change="onFileChange($event)", ref="photoInput")
-
-                    .container(v-else)
-                        .preview
-                            img(:src="photo")
-                            a(@click="photo = null")
-                                i.material-icons clear
-
-            send(:showModal="showModal",
-            @toggleModal="toggleModal",
-            :uploadedPhoto="uploadedPhoto",
-            :photo="photo",
-            :user="user",
-            @errorMessage="pushErrorMessage",
-            @clearPhoto="hideModal")
-
+    include chat_box.pug
 
 </template>
 

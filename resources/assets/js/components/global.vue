@@ -2,6 +2,9 @@
 
     .wrap
 
+        router-link.navigate(to='#', @click.native='updateStyles')
+            i.material-icons arrow_back
+
         .left
             left
 
@@ -13,11 +16,17 @@
 
 <script>
 
+    import {mixin} from '../style';
+
     export default {
 
         // ---------------------------------------------------
 
         props: ['auth_user'],
+
+        // ---------------------------------------------------
+
+        mixins: [mixin],
 
         // ---------------------------------------------------
 
@@ -28,7 +37,7 @@
         // ---------------------------------------------------
 
         mounted() {
-            console.log('Global component ok!');
+            this.resetStyle();
         }
 
         // ---------------------------------------------------

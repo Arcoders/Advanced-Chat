@@ -3,13 +3,13 @@
     #left_app
 
         .menu
-            router-link(to="/profile")
+            router-link(to="/profile", @click.native='showRight')
                 avatar.avatar(:username="user.name", color="#fff", :src="user.avatar")
 
-            router-link(to="/profile") {{ user.name }}
+            router-link(to="/profile", @click.native='showRight') {{ user.name | truncate(15)}}
 
             .icons
-                router-link(to="/groups")
+                router-link(to="/groups", @click.native='showRight')
                     i.material-icons person_add
 
                 a.notifications(:data-badge="totalNotifications", @click="toggleListNotifications")
@@ -46,6 +46,7 @@
 <script>
 
     import {mapState} from 'vuex';
+    import {mixin} from '../../style';
 
     export default {
 
@@ -59,6 +60,10 @@
                 showNotifications: false
             }
         },
+
+        // ---------------------------------------------------
+
+        mixins: [mixin],
 
         // ---------------------------------------------------
 

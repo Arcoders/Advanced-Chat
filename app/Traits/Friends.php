@@ -3,9 +3,14 @@
 namespace App\Traits;
 
 use App\Friendship;
+use App\Notifications\AcceptFriendRequest;
+use App\Notifications\NewFriendRequest;
+use App\User;
 
 trait Friends
 {
+
+    use TriggerPusher;
 
     public function addFriend($recipientId)
     {
@@ -18,6 +23,8 @@ trait Friends
             {
                 Friendship::create(['requester' => $this->id, 'requested' => $recipientId]);
             }
+
+            $this->notifySentRequests($recipientId);
 
             return 'waiting';
         }
@@ -35,6 +42,8 @@ trait Friends
         {
             Friendship::betweenUsers($this->id, $senderId)->update(['status' => 1]);
 
+            $this->notifyAcceptedRequests($senderId);
+
             return 'friends';
         }
 
@@ -50,6 +59,8 @@ trait Friends
         if ($status != 'not_friends')
         {
             Friendship::betweenUsers($this->id, $userId)->delete();
+
+            $this->removeChat($userId);
 
             return 'not_friends';
         }
@@ -146,6 +157,35 @@ trait Friends
             Friendship::whereRecipient($this->id)->accepted()->pluck('id')->toArray()
 
         );
+
+    }
+
+    protected function notifySentRequests($recipientId)
+    {
+
+        User::find($recipientId)->notify(new NewFriendRequest());
+
+        $this->trigger(["user_$recipientId", "user_$this->id"], 'refreshList', []);
+
+        $this->trigger("notification_$recipientId", 'updateCount', []);
+
+    }
+
+    protected function notifyAcceptedRequests($senderId)
+    {
+        User::find($senderId)->notify(new AcceptFriendRequest());
+
+        $this->trigger("user_$senderId", 'refreshList', ['type' => 'chat', 'id' => $this->id]);
+
+        $this->trigger("user_$this->id", 'refreshList', ['type' => 'chat', 'id' => $senderId]);
+
+        $this->trigger("notification_$senderId", 'updateCount', []);
+    }
+
+    protected function removeChat($userId)
+    {
+
+        $this->trigger(["user_$userId", "user_$this->id"], 'refreshList', ['type' => 'chat']);
 
     }
 

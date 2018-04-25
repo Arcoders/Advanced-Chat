@@ -51,13 +51,31 @@
 
         // ---------------------------------------------------
 
+        created() {
+
+            this.updateStatus();
+
+        },
+
+        // ---------------------------------------------------
+
         mounted() {
+
           this.relationShipStatus();
+
         },
 
         // ---------------------------------------------------
 
         methods: {
+            // ---------------------------------------------------
+
+            updateStatus() {
+
+                this.$pusher.subscribe(`user_${this.userId}`).bind('refreshList', () => this.relationShipStatus());
+
+            },
+
             // ---------------------------------------------------
 
             relationShipStatus() {

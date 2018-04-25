@@ -627,6 +627,10 @@ body {
   z-index: -100;
 }
 
+.navigate {
+  display: none;
+}
+
 .wrap {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1985,5 +1989,39 @@ body::-webkit-scrollbar-thumb,
   scrollbar-face-color: #eeeeee;
   scrollbar-highlight-color: #eeeeee;
   scrollbar-shadow-color: #dddddd;
+}
+
+@media (max-width: 1000px) {
+  .navigate {
+    position: absolute;
+    right: 50px;
+    display: block;
+  }
+
+  .navigate i {
+    margin-top: 15px;
+    color: #777777;
+    text-decoration: none;
+  }
+
+  .left {
+    display: none;
+  }
+
+  .right {
+    width: 100%;
+  }
+
+  .profile_box .widget {
+    width: 60%;
+  }
+
+  .profile_box .widget_100 {
+    width: 100%;
+  }
+
+  .profile_box .users {
+    width: 40%;
+  }
 }
 
